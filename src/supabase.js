@@ -76,7 +76,7 @@ export async function fetchMeals() {
   return data || [];
 }
 
-export async function createMeal({ name, mealType, recipe, notes }) {
+export async function createMeal({ name, mealType, recipe, notes, liked = false }) {
   const { data, error } = await client
     .from('meals')
     .insert({
@@ -85,6 +85,7 @@ export async function createMeal({ name, mealType, recipe, notes }) {
       meal_type: mealType,
       recipe: recipe || null,
       notes: notes || null,
+      liked: !!liked,
     })
     .select()
     .single();
@@ -92,15 +93,17 @@ export async function createMeal({ name, mealType, recipe, notes }) {
   return data;
 }
 
-export async function updateMeal(id, { name, mealType, recipe, notes }) {
+export async function updateMeal(id, { name, mealType, recipe, notes, liked }) {
+  const patch = {
+    name,
+    meal_type: mealType,
+    recipe: recipe || null,
+    notes: notes || null,
+  };
+  if (liked !== undefined) patch.liked = !!liked;
   const { data, error } = await client
     .from('meals')
-    .update({
-      name,
-      meal_type: mealType,
-      recipe: recipe || null,
-      notes: notes || null,
-    })
+    .update(patch)
     .eq('id', id)
     .eq('household_id', HOUSEHOLD_ID)
     .select()

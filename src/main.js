@@ -28,7 +28,7 @@ async function boot() {
   app.innerHTML = `
     <div class="app-tabs" role="tablist">
       <button type="button" class="tab active" role="tab" aria-selected="true" data-tab="week">Week planner</button>
-      <button type="button" class="tab" role="tab" aria-selected="false" data-tab="library">Meal library</button>
+      <button type="button" class="tab" role="tab" aria-selected="false" data-tab="library">Recipe book</button>
     </div>
     <div class="tab-panels">
       <div class="tab-panel" data-panel="week"></div>

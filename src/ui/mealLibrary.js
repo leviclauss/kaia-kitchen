@@ -15,6 +15,8 @@ const MEAL_TYPES = [
   { value: 'any', label: 'Any' },
 ];
 
+const FILTER_CHIPS = [{ value: 'all', label: 'All' }, ...MEAL_TYPES];
+
 let meals = [];
 let unsub = null;
 let rootEl = null;
@@ -30,22 +32,34 @@ export async function initMealLibrary(container, { onChange } = {}) {
   rootEl = container;
   onMealsChanged = onChange || null;
   rootEl.innerHTML = `
-    <div class="library-panel">
+    <div class="library-panel recipe-book">
       <div class="library-toolbar">
-        <h2>Meal library</h2>
-        <button type="button" class="btn btn-primary" data-action="add">+ Add meal</button>
+        <div class="library-toolbar-text">
+          <div class="library-title-row">
+            <h2>Recipe book</h2>
+            <span class="count-badge" data-count>0</span>
+          </div>
+          <p class="library-subtitle">Kaia's saved meals &amp; snacks</p>
+        </div>
+        <button type="button" class="btn btn-primary btn-add-recipe" data-action="add">+ Add recipe</button>
       </div>
       <div class="library-filters">
-        <input type="search" class="input" data-search placeholder="Search meals…" aria-label="Search meals" />
-        <select class="input" data-filter aria-label="Filter by type">
+        <input type="search" class="input" data-search placeholder="Search recipes…" aria-label="Search recipes" />
+        <div class="filter-chips" role="group" aria-label="Filter by type" data-chips>
+          ${FILTER_CHIPS.map(
+            (t) =>
+              `<button type="button" class="filter-chip${t.value === 'all' ? ' active' : ''}" data-filter-chip="${t.value}">${t.label}</button>`
+          ).join('')}
+        </div>
+        <select class="input filter-select-fallback" data-filter aria-label="Filter by type">
           <option value="all">All types</option>
           ${MEAL_TYPES.map((t) => `<option value="${t.value}">${t.label}</option>`).join('')}
         </select>
       </div>
-      <div class="library-list" data-list></div>
+      <div class="library-grid" data-list></div>
       <dialog class="modal" data-modal>
         <form method="dialog" class="modal-form" data-form>
-          <h3 data-modal-title>Add meal</h3>
+          <h3 data-modal-title>Add recipe</h3>
           <input type="hidden" name="id" />
           <label>Name
             <input class="input" name="name" required maxlength="200" placeholder="e.g. Yogurt + soft berries" />
@@ -56,10 +70,14 @@ export async function initMealLibrary(container, { onChange } = {}) {
             </select>
           </label>
           <label>Recipe <span class="optional">(optional)</span>
-            <textarea class="input" name="recipe" rows="3" placeholder="Tiny steps, big crumbs…"></textarea>
+            <textarea class="input" name="recipe" rows="6" placeholder="Tiny steps, big crumbs…"></textarea>
           </label>
           <label>Notes <span class="optional">(optional)</span>
             <textarea class="input" name="notes" rows="2" placeholder="Texture tips, leftovers, vibes…"></textarea>
+          </label>
+          <label class="liked-check">
+            <input type="checkbox" name="liked" />
+            <span>❤️ Liked</span>
           </label>
           <div class="modal-actions">
             <button type="submit" class="btn btn-ghost" value="cancel">Cancel</button>
@@ -108,30 +126,79 @@ function filtered() {
   });
 }
 
+function previewLines(text, maxLines = 3) {
+  if (!text) return '';
+  const lines = String(text).trim().split(/\n+/).filter(Boolean);
+  const clipped = lines.slice(0, maxLines).join('\n');
+  return escapeHtml(clipped);
+}
+
 function renderList() {
   const list = rootEl.querySelector('[data-list]');
+  const countEl = rootEl.querySelector('[data-count]');
   const items = filtered();
+  if (countEl) countEl.textContent = String(meals.length);
+
   if (!items.length) {
-    list.innerHTML = `<p class="empty-hint">No meals yet — add one, or re-run the SQL seed. The floor is not a meal (usually).</p>`;
+    const noRecipes = meals.length === 0;
+    list.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-emoji">${noRecipes ? '📖🍓' : '🔍'}</div>
+        <h3>${noRecipes ? 'Your recipe book is empty' : 'No matching recipes'}</h3>
+        <p class="muted">${
+          noRecipes
+            ? "Add Kaia's first meal or snack — or re-run the SQL seed. The floor is not a meal (usually)."
+            : 'Try another search or type filter.'
+        }</p>
+        ${
+          noRecipes
+            ? `<button type="button" class="btn btn-primary" data-empty-add>+ Add recipe</button>`
+            : `<button type="button" class="btn btn-ghost" data-empty-clear>Clear filters</button>`
+        }
+      </div>`;
     return;
   }
+
   list.innerHTML = items
-    .map(
-      (m) => `
-    <article class="library-item" data-id="${m.id}">
-      <div class="library-item-main">
-        <span class="type-chip type-chip--${m.meal_type}">${m.meal_type}</span>
+    .map((m) => {
+      const liked = !!m.liked;
+      const recipePreview = m.recipe
+        ? `<p class="recipe-preview">${previewLines(m.recipe, 3)}</p>`
+        : `<p class="recipe-preview recipe-preview--empty muted">No recipe steps yet</p>`;
+      const notes = m.notes
+        ? `<p class="notes-line">${escapeHtml(m.notes)}</p>`
+        : '';
+      return `
+    <article class="recipe-card${liked ? ' recipe-card--liked' : ''}" data-id="${m.id}">
+      <button type="button" class="recipe-card-body" data-open="${m.id}" aria-label="Edit ${escapeHtml(m.name)}">
+        <div class="recipe-card-top">
+          <span class="type-chip type-chip--${m.meal_type}">${m.meal_type}</span>
+          <span class="liked-badge" aria-hidden="true">${liked ? '❤️' : ''}</span>
+        </div>
         <h3>${escapeHtml(m.name)}</h3>
-        ${m.recipe ? `<p class="muted">${escapeHtml(m.recipe)}</p>` : ''}
-        ${m.notes ? `<p class="notes-line">${escapeHtml(m.notes)}</p>` : ''}
-      </div>
-      <div class="library-item-actions">
+        ${recipePreview}
+        ${notes}
+      </button>
+      <div class="recipe-card-actions">
+        <button type="button" class="btn btn-sm liked-toggle${liked ? ' is-liked' : ''}" data-like="${m.id}" aria-pressed="${liked}" title="${liked ? 'Unlike' : 'Like'}">
+          ${liked ? '❤️ Liked' : '♡ Like'}
+        </button>
         <button type="button" class="btn btn-sm" data-edit="${m.id}">Edit</button>
-        <button type="button" class="btn btn-sm btn-danger" data-delete="${m.id}">Delete</button>
+        <button type="button" class="btn btn-sm btn-danger" data-delete="${m.id}">Remove</button>
       </div>
-    </article>`
-    )
+    </article>`;
+    })
     .join('');
+}
+
+function setFilter(value) {
+  filterType = value;
+  rootEl.querySelectorAll('[data-filter-chip]').forEach((btn) => {
+    btn.classList.toggle('active', btn.getAttribute('data-filter-chip') === value);
+  });
+  const select = rootEl.querySelector('[data-filter]');
+  if (select) select.value = value;
+  renderList();
 }
 
 function bindEvents() {
@@ -141,19 +208,68 @@ function bindEvents() {
     renderList();
   });
   rootEl.querySelector('[data-filter]').addEventListener('change', (e) => {
-    filterType = e.target.value;
-    renderList();
+    setFilter(e.target.value);
+  });
+  rootEl.querySelector('[data-chips]').addEventListener('click', (e) => {
+    const chip = e.target.closest('[data-filter-chip]');
+    if (!chip) return;
+    setFilter(chip.getAttribute('data-filter-chip'));
   });
 
   rootEl.querySelector('[data-list]').addEventListener('click', async (e) => {
-    const editId = e.target.closest('[data-edit]')?.getAttribute('data-edit');
+    const emptyAdd = e.target.closest('[data-empty-add]');
+    if (emptyAdd) {
+      openModal();
+      return;
+    }
+    const emptyClear = e.target.closest('[data-empty-clear]');
+    if (emptyClear) {
+      searchQ = '';
+      const search = rootEl.querySelector('[data-search]');
+      if (search) search.value = '';
+      setFilter('all');
+      return;
+    }
+
+    const likeId = e.target.closest('[data-like]')?.getAttribute('data-like');
+    if (likeId) {
+      e.preventDefault();
+      e.stopPropagation();
+      const meal = meals.find((m) => m.id === likeId);
+      if (!meal) return;
+      try {
+        setStatus('syncing');
+        await updateMeal(likeId, {
+          name: meal.name,
+          mealType: meal.meal_type,
+          recipe: meal.recipe || '',
+          notes: meal.notes || '',
+          liked: !meal.liked,
+        });
+        await refresh();
+      } catch (err) {
+        console.error(err);
+        setStatus('error', 'like');
+        alert('Could not update liked status.');
+      }
+      return;
+    }
+
+    const editId =
+      e.target.closest('[data-edit]')?.getAttribute('data-edit') ||
+      e.target.closest('[data-open]')?.getAttribute('data-open');
     const delId = e.target.closest('[data-delete]')?.getAttribute('data-delete');
-    if (editId) {
+
+    if (editId && !delId) {
       const meal = meals.find((m) => m.id === editId);
       if (meal) openModal(meal);
+      return;
     }
+
     if (delId) {
-      if (!confirm('Delete this meal from the library? (Week slots keep their copied text.)')) return;
+      e.preventDefault();
+      e.stopPropagation();
+      if (!confirm('Remove this recipe from the book? (Week slots keep their copied text.)')) return;
       try {
         setStatus('syncing');
         await deleteMeal(delId);
@@ -161,7 +277,7 @@ function bindEvents() {
       } catch (err) {
         console.error(err);
         setStatus('error', 'delete');
-        alert('Could not delete meal. Check Supabase policies / connection.');
+        alert('Could not remove recipe. Check Supabase policies / connection.');
       }
     }
   });
@@ -178,6 +294,7 @@ function bindEvents() {
       mealType: String(fd.get('mealType') || 'any'),
       recipe: String(fd.get('recipe') || '').trim(),
       notes: String(fd.get('notes') || '').trim(),
+      liked: form.liked.checked,
     };
     if (!payload.name) return;
     try {
@@ -189,7 +306,7 @@ function bindEvents() {
     } catch (err) {
       console.error(err);
       setStatus('error', 'save');
-      alert('Could not save meal.');
+      alert('Could not save recipe.');
     }
   });
 }
@@ -197,12 +314,13 @@ function bindEvents() {
 function openModal(meal = null) {
   const modal = rootEl.querySelector('[data-modal]');
   const form = rootEl.querySelector('[data-form]');
-  form.querySelector('[data-modal-title]').textContent = meal ? 'Edit meal' : 'Add meal';
+  form.querySelector('[data-modal-title]').textContent = meal ? 'Edit recipe' : 'Add recipe';
   form.id.value = meal?.id || '';
   form.name.value = meal?.name || '';
   form.mealType.value = meal?.meal_type || 'any';
   form.recipe.value = meal?.recipe || '';
   form.notes.value = meal?.notes || '';
+  form.liked.checked = !!meal?.liked;
   modal.showModal();
   form.name.focus();
 }

@@ -21,9 +21,12 @@ create table if not exists public.meals (
   meal_type text not null check (meal_type in ('breakfast', 'snack', 'lunch', 'dinner', 'any')),
   recipe text,
   notes text,
+  liked boolean not null default false,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+alter table public.meals add column if not exists liked boolean not null default false;
 
 create table if not exists public.week_slots (
   id uuid primary key default gen_random_uuid(),
