@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Kaia's Nom Nom Week — a cute weekly meal plan for a hungry 13-month-old, with strawberries and corgis." />
+  <title>Kaia's Nom Nom Week</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <img class="deco deco-corgi-1" src="assets/corgi.svg" alt="" aria-hidden="true" />
+  <img class="deco deco-berry-1" src="assets/strawberry.svg" alt="" aria-hidden="true" />
+  <img class="deco deco-corgi-2" src="assets/corgi.svg" alt="" aria-hidden="true" />
+  <img class="deco deco-berry-2" src="assets/strawberry.svg" alt="" aria-hidden="true" />
+
+  <div class="wrap">
+    <header class="hero">
+      <div class="hero-icons">
+        <img src="assets/strawberry.svg" alt="" width="56" height="65" />
+        <img src="assets/corgi.svg" alt="" width="56" height="50" />
+        <img src="assets/strawberry.svg" alt="" width="56" height="65" />
+      </div>
+      <h1>Kaia's Nom Nom Week</h1>
+      <p class="subtitle">
+        A lovingly chaotic meal plan for our 13-month-old food critic —
+        where half the banana is a snack and the other half is floor confetti.
+      </p>
+      <span class="age-badge">13 months of big appetite energy</span>
+
+      <div class="sticker-row" id="sticker-row" aria-label="Kaia photo stickers">
+        <img class="sticker" src="assets/kaia/kaia-1.png" alt="Kaia photo 1" data-sticker="1" onerror="hideSticker(this)" />
+        <img class="sticker" src="assets/kaia/kaia-2.png" alt="Kaia photo 2" data-sticker="2" onerror="hideSticker(this)" />
+        <img class="sticker" src="assets/kaia/kaia-3.png" alt="Kaia photo 3" data-sticker="3" onerror="hideSticker(this)" />
+        <div class="sticker-fallback" id="sticker-fallback" aria-hidden="true">
+          <img src="assets/strawberry.svg" alt="" />
+        </div>
+      </div>
+    </header>
+
+    <nav class="day-nav" aria-label="Jump to day" id="day-nav">
+      <button type="button" class="day-pill active" data-day="all">All week</button>
+      <button type="button" class="day-pill" data-day="monday">Mon</button>
+      <button type="button" class="day-pill" data-day="tuesday">Tue</button>
+      <button type="button" class="day-pill" data-day="wednesday">Wed</button>
+      <button type="button" class="day-pill" data-day="thursday">Thu</button>
+      <button type="button" class="day-pill" data-day="friday">Fri</button>
+      <button type="button" class="day-pill" data-day="saturday">Sat</button>
+      <button type="button" class="day-pill" data-day="sunday">Sun</button>
+    </nav>
+
+    <main class="days" id="days">
+      <!-- Monday -->
+      <section class="day-card" id="monday" data-day="monday">
+        <div class="day-header">
+          <h2>Monday</h2>
+          <span class="emoji" aria-hidden="true">🍓</span>
+        </div>
+        <div class="meals">
+          <article class="meal" data-type="breakfast">
+            <span class="meal-icon" aria-hidden="true">🌅</span>
+            <span class="meal-label">Breakfast</span>
+            <p class="meal-food">Soft scrambled egg, avocado strips, banana toast fingers</p>
+          </article>
+          <article class="meal" data-type="snack1">
+            <span class="meal-icon" aria-hidden="true">🫐</span>
+            <span class="meal-label">Snack 1</span>
+            <p class="meal-food">Full-fat yogurt + blueberries (halved)</p>
+          </article>
+          <article class="meal" data-type="lunch">
+            <span class="meal-icon" aria-hidden="true">☀️</span>
+            <span class="meal-label">Lunch</span>
+            <p class="meal-food">Shredded chicken, steamed carrot coins, soft pear pieces</p>
+          </article>
+          <article class="meal" data-type="snack2">
+            <span class="meal-icon" aria-hidden="true">🧀</span>
+            <span class="meal-label">Snack 2</span>
+            <p class="meal-food">Cheese cubes + soft steamed apple</p>
+          </article>
+          <article class="meal" data-type="dinner">
+            <span class="meal-icon" aria-hidden="true">🌙</span>
+            <span class="meal-label">Dinner</span>
+            <p class="meal-food">Flaky salmon, mashed sweet potato, soft broccoli florets</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- Tuesday -->
+      <section class="day-card" id="tuesday" data-day="tuesday">
+        <div class="day-header">
+          <h2>Tuesday</h2>
+          <span class="emoji" aria-hidden="true">🐕</span>
+        </div>
+        <div class="meals">
+          <article class="meal" data-type="breakfast">
+            <span class="meal-icon" aria-hidden="true">🌅</span>
+            <span class="meal-label">Breakfast</span>
+            <p class="meal-food">Oatmeal (plain or with mashed banana), soft peach slices</p>
+          </article>
+          <article class="meal" data-type="snack1">
+            <span class="meal-icon" aria-hidden="true">🍈</span>
+            <span class="meal-label">Snack 1</span>
+            <p class="meal-food">Cottage cheese + soft melon</p>
+          </article>
+          <article class="meal" data-type="lunch">
+            <span class="meal-icon" aria-hidden="true">☀️</span>
+            <span class="meal-label">Lunch</span>
+            <p class="meal-food">Soft lentils, roasted zucchini coins, ripe mango strips</p>
+          </article>
+          <article class="meal" data-type="snack2">
+            <span class="meal-icon" aria-hidden="true">🥒</span>
+            <span class="meal-label">Snack 2</span>
+            <p class="meal-food">Hummus + cucumber sticks</p>
+          </article>
+          <article class="meal" data-type="dinner">
+            <span class="meal-icon" aria-hidden="true">🌙</span>
+            <span class="meal-label">Dinner</span>
+            <p class="meal-food">Ground turkey, mashed potato, soft green beans</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- Wednesday -->
+      <section class="day-card" id="wednesday" data-day="wednesday">
+        <div class="day-header">
+          <h2>Wednesday</h2>
+          <span class="emoji" aria-hidden="true">🍓</span>
+        </div>
+        <div class="meals">
+          <article class="meal" data-type="breakfast">
+            <span class="meal-icon" aria-hidden="true">🌅</span>
+            <span class="meal-label">Breakfast</span>
+            <p class="meal-food">French toast fingers (egg + milk), smashed raspberries</p>
+          </article>
+          <article class="meal" data-type="snack1">
+            <span class="meal-icon" aria-hidden="true">🍐</span>
+            <span class="meal-label">Snack 1</span>
+            <p class="meal-food">Full-fat yogurt + soft pear</p>
+          </article>
+          <article class="meal" data-type="lunch">
+            <span class="meal-icon" aria-hidden="true">☀️</span>
+            <span class="meal-label">Lunch</span>
+            <p class="meal-food">Soft scrambled tofu or egg, steamed cauliflower, banana</p>
+          </article>
+          <article class="meal" data-type="snack2">
+            <span class="meal-icon" aria-hidden="true">🥕</span>
+            <span class="meal-label">Snack 2</span>
+            <p class="meal-food">Soft cheese + steamed carrot sticks</p>
+          </article>
+          <article class="meal" data-type="dinner">
+            <span class="meal-icon" aria-hidden="true">🌙</span>
+            <span class="meal-label">Dinner</span>
+            <p class="meal-food">Mild fish cakes (no breadcrumb nut mix), mashed peas, soft squash</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- Thursday -->
+      <section class="day-card" id="thursday" data-day="thursday">
+        <div class="day-header">
+          <h2>Thursday</h2>
+          <span class="emoji" aria-hidden="true">🐕</span>
+        </div>
+        <div class="meals">
+          <article class="meal" data-type="breakfast">
+            <span class="meal-icon" aria-hidden="true">🌅</span>
+            <span class="meal-label">Breakfast</span>
+            <p class="meal-food">Plain yogurt parfait: yogurt, soft strawberries, oat circles</p>
+          </article>
+          <article class="meal" data-type="snack1">
+            <span class="meal-icon" aria-hidden="true">🍘</span>
+            <span class="meal-label">Snack 1</span>
+            <p class="meal-food">Soft pear + a few plain crackers (check label)</p>
+          </article>
+          <article class="meal" data-type="lunch">
+            <span class="meal-icon" aria-hidden="true">☀️</span>
+            <span class="meal-label">Lunch</span>
+            <p class="meal-food">Shredded beef or soft black beans, soft sweet potato cubes, cucumber</p>
+          </article>
+          <article class="meal" data-type="snack2">
+            <span class="meal-icon" aria-hidden="true">🥑</span>
+            <span class="meal-label">Snack 2</span>
+            <p class="meal-food">Avocado + cheese</p>
+          </article>
+          <article class="meal" data-type="dinner">
+            <span class="meal-icon" aria-hidden="true">🌙</span>
+            <span class="meal-label">Dinner</span>
+            <p class="meal-food">Chicken meatballs (plain), pasta tubes (soft), steamed broccoli</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- Friday -->
+      <section class="day-card" id="friday" data-day="friday">
+        <div class="day-header">
+          <h2>Friday</h2>
+          <span class="emoji" aria-hidden="true">🍓</span>
+        </div>
+        <div class="meals">
+          <article class="meal" data-type="breakfast">
+            <span class="meal-icon" aria-hidden="true">🌅</span>
+            <span class="meal-label">Breakfast</span>
+            <p class="meal-food">Soft pancake fingers, mashed banana, side of yogurt</p>
+          </article>
+          <article class="meal" data-type="snack1">
+            <span class="meal-icon" aria-hidden="true">🫐</span>
+            <span class="meal-label">Snack 1</span>
+            <p class="meal-food">Blueberries + cottage cheese</p>
+          </article>
+          <article class="meal" data-type="lunch">
+            <span class="meal-icon" aria-hidden="true">☀️</span>
+            <span class="meal-label">Lunch</span>
+            <p class="meal-food">Soft white fish, mashed carrot, ripe kiwi (peeled, soft)</p>
+          </article>
+          <article class="meal" data-type="snack2">
+            <span class="meal-icon" aria-hidden="true">🫑</span>
+            <span class="meal-label">Snack 2</span>
+            <p class="meal-food">Hummus + soft pepper strips</p>
+          </article>
+          <article class="meal" data-type="dinner">
+            <span class="meal-icon" aria-hidden="true">🌙</span>
+            <span class="meal-label">Dinner</span>
+            <p class="meal-food">Mild chili (beans + ground turkey, low spice), rice, avocado</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- Saturday -->
+      <section class="day-card" id="saturday" data-day="saturday">
+        <div class="day-header">
+          <h2>Saturday</h2>
+          <span class="emoji" aria-hidden="true">🐕</span>
+        </div>
+        <div class="meals">
+          <article class="meal" data-type="breakfast">
+            <span class="meal-icon" aria-hidden="true">🌅</span>
+            <span class="meal-label">Breakfast</span>
+            <p class="meal-food">Egg muffins (egg + spinach + cheese, soft), orange segments</p>
+          </article>
+          <article class="meal" data-type="snack1">
+            <span class="meal-icon" aria-hidden="true">🍑</span>
+            <span class="meal-label">Snack 1</span>
+            <p class="meal-food">Yogurt + soft peach</p>
+          </article>
+          <article class="meal" data-type="lunch">
+            <span class="meal-icon" aria-hidden="true">☀️</span>
+            <span class="meal-label">Lunch</span>
+            <p class="meal-food">Leftover meatballs or chicken, soft pasta, steamed zucchini</p>
+          </article>
+          <article class="meal" data-type="snack2">
+            <span class="meal-icon" aria-hidden="true">🍎</span>
+            <span class="meal-label">Snack 2</span>
+            <p class="meal-food">Cheese + soft apple</p>
+          </article>
+          <article class="meal" data-type="dinner">
+            <span class="meal-icon" aria-hidden="true">🌙</span>
+            <span class="meal-label">Dinner</span>
+            <p class="meal-food">Baked chicken thigh (shredded), mashed cauliflower, soft peas</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- Sunday -->
+      <section class="day-card" id="sunday" data-day="sunday">
+        <div class="day-header">
+          <h2>Sunday</h2>
+          <span class="emoji" aria-hidden="true">🍓</span>
+        </div>
+        <div class="meals">
+          <article class="meal" data-type="breakfast">
+            <span class="meal-icon" aria-hidden="true">🌅</span>
+            <span class="meal-label">Breakfast</span>
+            <p class="meal-food">Overnight oats (milk + banana), soft berries</p>
+          </article>
+          <article class="meal" data-type="snack1">
+            <span class="meal-icon" aria-hidden="true">🍈</span>
+            <span class="meal-label">Snack 1</span>
+            <p class="meal-food">Cottage cheese + melon</p>
+          </article>
+          <article class="meal" data-type="lunch">
+            <span class="meal-icon" aria-hidden="true">☀️</span>
+            <span class="meal-label">Lunch</span>
+            <p class="meal-food">Soft chickpeas (mashed a bit), roasted carrot, pear</p>
+          </article>
+          <article class="meal" data-type="snack2">
+            <span class="meal-icon" aria-hidden="true">🍌</span>
+            <span class="meal-label">Snack 2</span>
+            <p class="meal-food">Yogurt + banana</p>
+          </article>
+          <article class="meal" data-type="dinner">
+            <span class="meal-icon" aria-hidden="true">🌙</span>
+            <span class="meal-label">Dinner</span>
+            <p class="meal-food">Mild salmon or turkey, mashed sweet potato, soft broccoli</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>
+        <strong>Allergy note:</strong> Everyday meals avoid peanut, walnut, cashew, pistachio, and almond.
+        OIT dosing is separate / doctor-managed. Portions = follow her appetite
+        (even if “her appetite” means three bites and a victory lap).
+      </p>
+      <span class="paw">Made with crumbs, kisses &amp; corgi energy 🐾🍓</span>
+    </footer>
+  </div>
+
+  <script>
+    function hideSticker(img) {
+      img.classList.add("hidden");
+      updateStickerFallback();
+    }
+
+    function updateStickerFallback() {
+      const stickers = document.querySelectorAll(".sticker");
+      const anyVisible = Array.from(stickers).some(function (s) {
+        return !s.classList.contains("hidden") && s.complete && s.naturalWidth > 0;
+      });
+      const fallback = document.getElementById("sticker-fallback");
+      if (fallback) {
+        fallback.classList.toggle("hidden", anyVisible);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      // Photo stickers: hide broken ones, show SVG fallback if none load
+      const stickers = document.querySelectorAll(".sticker");
+      var pending = stickers.length;
+      stickers.forEach(function (img) {
+        if (img.complete) {
+          if (img.naturalWidth === 0) hideSticker(img);
+          pending--;
+          if (pending <= 0) updateStickerFallback();
+        } else {
+          img.addEventListener("load", function () {
+            pending--;
+            if (pending <= 0) updateStickerFallback();
+          });
+          img.addEventListener("error", function () {
+            hideSticker(img);
+            pending--;
+            if (pending <= 0) updateStickerFallback();
+          });
+        }
+      });
+      // If no stickers, show fallback soon
+      setTimeout(updateStickerFallback, 400);
+
+      // Day nav pills
+      const pills = document.querySelectorAll(".day-pill");
+      const cards = document.querySelectorAll(".day-card");
+
+      pills.forEach(function (pill) {
+        pill.addEventListener("click", function () {
+          const day = pill.getAttribute("data-day");
+          pills.forEach(function (p) { p.classList.remove("active"); });
+          pill.classList.add("active");
+
+          cards.forEach(function (card) {
+            if (day === "all") {
+              card.classList.remove("hidden-day");
+            } else {
+              card.classList.toggle("hidden-day", card.getAttribute("data-day") !== day);
+            }
+          });
+
+          if (day !== "all") {
+            const target = document.getElementById(day);
+            if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+          } else {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

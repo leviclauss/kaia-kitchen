@@ -1,0 +1,438 @@
+/* Kaya's Nom Nom Week — strawberries + corgis */
+:root {
+  --cream: #FFF8F0;
+  --blush: #FFE4EC;
+  --pink: #FFB6C1;
+  --berry: #E84855;
+  --berry-deep: #C73A48;
+  --soft-red: #FF6B7A;
+  --corgi: #F4A460;
+  --leaf: #5BA85A;
+  --ink: #4A3040;
+  --ink-soft: #7A5A6A;
+  --card: #FFFFFF;
+  --shadow: 0 8px 24px rgba(232, 72, 85, 0.12);
+  --shadow-sm: 0 4px 12px rgba(232, 72, 85, 0.08);
+  --radius: 20px;
+  --radius-sm: 14px;
+  --font: "Nunito", "Fredoka", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font);
+  background: linear-gradient(165deg, var(--blush) 0%, var(--cream) 45%, #FFE8EE 100%);
+  color: var(--ink);
+  min-height: 100vh;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+/* Decorative floaters */
+.deco {
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.55;
+  animation: floaty 6s ease-in-out infinite;
+}
+
+.deco-corgi-1 {
+  top: 12%;
+  right: -20px;
+  width: 90px;
+  animation-delay: 0s;
+}
+
+.deco-berry-1 {
+  top: 40%;
+  left: -10px;
+  width: 55px;
+  animation-delay: 1.5s;
+}
+
+.deco-corgi-2 {
+  bottom: 18%;
+  left: 2%;
+  width: 70px;
+  animation-delay: 3s;
+  transform: scaleX(-1);
+}
+
+.deco-berry-2 {
+  bottom: 8%;
+  right: 4%;
+  width: 48px;
+  animation-delay: 2s;
+}
+
+@keyframes floaty {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-12px) rotate(3deg); }
+}
+
+.deco-corgi-2 {
+  animation-name: floaty-flip;
+}
+
+@keyframes floaty-flip {
+  0%, 100% { transform: scaleX(-1) translateY(0) rotate(2deg); }
+  50% { transform: scaleX(-1) translateY(-10px) rotate(-3deg); }
+}
+
+.wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 3rem;
+}
+
+/* Header */
+.hero {
+  text-align: center;
+  padding: 1.5rem 1rem 1.25rem;
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 1.25rem;
+  border: 3px solid var(--pink);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(255, 182, 193, 0.35), transparent 40%),
+    radial-gradient(circle at 85% 80%, rgba(244, 164, 96, 0.2), transparent 45%);
+  pointer-events: none;
+}
+
+.hero-icons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+  position: relative;
+}
+
+.hero-icons img {
+  width: 56px;
+  height: auto;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.08));
+}
+
+.hero h1 {
+  font-size: clamp(1.6rem, 5vw, 2.15rem);
+  font-weight: 800;
+  color: var(--berry);
+  letter-spacing: -0.02em;
+  position: relative;
+}
+
+.hero .subtitle {
+  margin-top: 0.4rem;
+  font-size: clamp(0.9rem, 2.8vw, 1.05rem);
+  color: var(--ink-soft);
+  font-weight: 600;
+  max-width: 28em;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+}
+
+.age-badge {
+  display: inline-block;
+  margin-top: 0.75rem;
+  background: var(--blush);
+  color: var(--berry-deep);
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  position: relative;
+}
+
+/* Photo stickers */
+.sticker-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.65rem;
+  margin-top: 1rem;
+  position: relative;
+}
+
+.sticker {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--pink);
+  box-shadow: var(--shadow-sm);
+  background: var(--blush);
+}
+
+.sticker.hidden {
+  display: none;
+}
+
+.sticker-fallback {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 3px dashed var(--pink);
+  background: var(--blush);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+}
+
+.sticker-fallback img {
+  width: 100%;
+  height: auto;
+  opacity: 0.7;
+}
+
+.sticker-fallback.hidden {
+  display: none;
+}
+
+/* Day nav pills */
+.day-nav {
+  display: flex;
+  gap: 0.4rem;
+  overflow-x: auto;
+  padding: 0.35rem 0.15rem 0.75rem;
+  margin-bottom: 0.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--pink) transparent;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+}
+
+.day-nav::-webkit-scrollbar {
+  height: 6px;
+}
+
+.day-nav::-webkit-scrollbar-thumb {
+  background: var(--pink);
+  border-radius: 999px;
+}
+
+.day-pill {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  border: 2px solid var(--pink);
+  background: var(--card);
+  color: var(--ink);
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;
+  white-space:nowrap;
+}
+
+.day-pill:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.day-pill:focus-visible {
+  outline: 3px solid var(--berry);
+  outline-offset: 2px;
+}
+
+.day-pill.active {
+  background: var(--berry);
+  border-color: var(--berry);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(232, 72, 85, 0.35);
+}
+
+.show-all-btn {
+  flex: 0 0 auto;
+  border: 2px dashed var(--corgi);
+  background: #FFF5EB;
+  color: var(--ink);
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 0.55rem 0.85rem;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.show-all-btn.active {
+  background: var(--corgi);
+  color: #fff;
+  border-style: solid;
+}
+
+/* Day cards */
+.days {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.day-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 2px solid var(--blush);
+  overflow: hidden;
+  scroll-margin-top: 1rem;
+}
+
+.day-card.hidden-day {
+  display: none;
+}
+
+.day-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.9rem 1.1rem;
+  background: linear-gradient(90deg, var(--blush), #FFE8D6);
+  border-bottom: 2px solid var(--pink);
+}
+
+.day-header h2 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--berry-deep);
+}
+
+.day-header .emoji {
+  font-size: 1.5rem;
+}
+
+.meals {
+  padding: 0.75rem 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.meal {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.15rem 0.75rem;
+  padding: 0.75rem 0.85rem;
+  background: var(--cream);
+  border-radius: var(--radius-sm);
+  border-left: 4px solid var(--pink);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.meal:hover {
+  transform: translateX(3px);
+  box-shadow: var(--shadow-sm);
+}
+
+.meal[data-type="breakfast"] { border-left-color: var(--corgi); }
+.meal[data-type="snack1"],
+.meal[data-type="snack2"] { border-left-color: var(--leaf); }
+.meal[data-type="lunch"] { border-left-color: var(--soft-red); }
+.meal[data-type="dinner"] { border-left-color: var(--berry); }
+
+.meal-icon {
+  grid-row: 1 / 3;
+  font-size: 1.45rem;
+  line-height: 1;
+  align-self: center;
+}
+
+.meal-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+
+.meal-food {
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* Footer */
+.footer {
+  margin-top: 1.75rem;
+  padding: 1.1rem 1.2rem;
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  border: 2px solid var(--blush);
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  text-align: center;
+}
+
+.footer strong {
+  color: var(--berry-deep);
+}
+
+.footer .paw {
+  display: block;
+  margin-top: 0.6rem;
+  font-size: 0.9rem;
+  color: var(--corgi);
+  font-weight: 700;
+}
+
+/* Mobile: show all days scrollable by default feel */
+@media (max-width: 560px) {
+  .deco-corgi-1 { width: 60px; right: -30px; }
+  .deco-berry-1 { width: 40px; }
+  .deco-corgi-2 { width: 50px; }
+  .deco-berry-2 { width: 36px; }
+
+  .wrap {
+    padding: 1rem 0.75rem 2.5rem;
+  }
+
+  .meal {
+    grid-template-columns: auto 1fr;
+  }
+
+  .sticker,
+  .sticker-fallback {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .deco,
+  .deco-corgi-2 {
+    animation: none;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
