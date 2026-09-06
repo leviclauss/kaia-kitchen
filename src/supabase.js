@@ -207,3 +207,172 @@ export function subscribeWeekSlots(weekStart, onChange) {
     client.removeChannel(channel);
   };
 }
+
+/* ---- Grocery items ---- */
+
+export async function fetchGroceryItems(weekStart) {
+  const { data, error } = await client
+    .from('grocery_items')
+    .select('*')
+    .eq('household_id', HOUSEHOLD_ID)
+    .eq('week_start', weekStart)
+    .order('created_at', { ascending: true });
+  if (error) throw error;
+  return data || [];
+}
+
+export async function createGroceryItem({ weekStart, name, haveIt = false, source = 'manual' }) {
+  const { data, error } = await client
+    .from('grocery_items')
+    .insert({
+      household_id: HOUSEHOLD_ID,
+      week_start: weekStart,
+      name: String(name || '').trim(),
+      have_it: !!haveIt,
+      source: source === 'plan' ? 'plan' : 'manual',
+    })
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function updateGroceryItem(id, { name, haveIt }) {
+  const patch = {};
+  if (name !== undefined) patch.name = String(name || '').trim();
+  if (haveIt !== undefined) patch.have_it = !!haveIt;
+  const { data, error } = await client
+    .from('grocery_items')
+    .update(patch)
+    .eq('id', id)
+    .eq('household_id', HOUSEHOLD_ID)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function deleteGroceryItem(id) {
+  const { error } = await client
+    .from('grocery_items')
+    .delete()
+    .eq('id', id)
+    .eq('household_id', HOUSEHOLD_ID);
+  if (error) throw error;
+}
+
+export async function upsertGroceryItem({ weekStart, name, haveIt = false, source = 'manual' }) {
+  const { data, error } = await client
+    .from('grocery_items')
+    .upsert(
+      {
+        household_id: HOUSEHOLD_ID,
+        week_start: weekStart,
+        name: String(name || '').trim(),
+        have_it: !!haveIt,
+        source: source === 'plan' ? 'plan' : 'manual',
+      },
+      { onConflict: 'household_id,week_start,name', ignoreDuplicates: true }
+    )
+    .select();
+  if (error) throw error;
+  return data?.[0] || null;
+}
+
+/** Insert plan items that are missing; never overwrite existing have_it / manual rows. */
+export async function mergePlanGroceryItems(weekStart, names) {
+  const unique = [];
+  const seen = new Set();
+  for (const raw of names) {
+    const name = String(raw || '').trim();
+    if (!name) continue;
+    const key = name.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    unique.push(name);
+  }
+  if (!unique.length) return [];
+
+  const existing = await fetchGroceryItems(weekStart);
+  const existingKeys = new Set(existing.map((r) => r.name.toLowerCase()));
+  const toInsert = unique
+    .filter((n) => !existingKeys.has(n.toLowerCase()))
+    .map((name) => ({
+      household_id: HOUSEHOLD_ID,
+      week_start: weekStart,
+      name,
+      have_it: false,
+      source: 'plan',
+    }));
+
+  if (!toInsert.length) return existing;
+
+  const { data, error } = await client.from('grocery_items').insert(toInsert).select();
+  if (error) throw error;
+  return [...existing, ...(data || [])];
+}
+
+/** Wipe week grocery list and re-seed from plan names (have_it false, source plan). */
+export async function resetGroceryFromPlan(weekStart, names) {
+  const { error: delErr } = await client
+    .from('grocery_items')
+    .delete()
+    .eq('household_id', HOUSEHOLD_ID)
+    .eq('week_start', weekStart);
+  if (delErr) throw delErr;
+
+  const unique = [];
+  const seen = new Set();
+  for (const raw of names) {
+    const name = String(raw || '').trim();
+    if (!name) continue;
+    const key = name.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    unique.push(name);
+  }
+  if (!unique.length) return [];
+
+  const rows = unique.map((name) => ({
+    household_id: HOUSEHOLD_ID,
+    week_start: weekStart,
+    name,
+    have_it: false,
+    source: 'plan',
+  }));
+  const { data, error } = await client.from('grocery_items').insert(rows).select();
+  if (error) throw error;
+  return data || [];
+}
+
+export async function clearHaveGroceryItems(weekStart) {
+  const { error } = await client
+    .from('grocery_items')
+    .update({ have_it: false })
+    .eq('household_id', HOUSEHOLD_ID)
+    .eq('week_start', weekStart)
+    .eq('have_it', true);
+  if (error) throw error;
+}
+
+export function subscribeGroceryItems(weekStart, onChange) {
+  const channel = client
+    .channel(`grocery-items-${weekStart}`)
+    .on(
+      'postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'grocery_items',
+        filter: `household_id=eq.${HOUSEHOLD_ID}`,
+      },
+      (payload) => {
+        const row = payload.new?.week_start || payload.old?.week_start;
+        if (row === weekStart || !row) onChange(payload);
+      }
+    )
+    .subscribe();
+  return () => {
+    client.removeChannel(channel);
+  };
+}

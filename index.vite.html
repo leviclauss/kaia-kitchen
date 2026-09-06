@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Kaia's Nom Nom Week — a cute shared weekly meal planner for parents, with strawberries and corgis." />
+  <title>Kaia's Nom Nom Week</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <img class="deco deco-corgi-1" src="assets/corgi.svg" alt="" aria-hidden="true" />
+  <img class="deco deco-berry-1" src="assets/strawberry.svg" alt="" aria-hidden="true" />
+  <img class="deco deco-corgi-2" src="assets/corgi.svg" alt="" aria-hidden="true" />
+  <img class="deco deco-berry-2" src="assets/strawberry.svg" alt="" aria-hidden="true" />
+
+  <div class="wrap">
+    <header class="hero">
+      <div class="hero-top">
+        <div class="hero-icons">
+          <img src="assets/strawberry.svg" alt="" width="56" height="65" />
+          <img src="assets/corgi.svg" alt="" width="56" height="50" />
+          <img src="assets/strawberry.svg" alt="" width="56" height="65" />
+        </div>
+        <div id="status-host" class="status-host"></div>
+      </div>
+      <h1>Kaia's Nom Nom Week</h1>
+      <p class="subtitle">
+        A lovingly chaotic shared meal plan for our 13-month-old food critic —
+        where half the banana is a snack and the other half is floor confetti.
+        Parents plan together; crumbs are inevitable.
+      </p>
+      <span class="age-badge">13 months of big appetite energy</span>
+
+      <div class="sticker-row" id="sticker-row" aria-label="Kaia photo stickers">
+        <img class="sticker" src="assets/kaia/kaia-1.png" alt="Kaia photo 1" data-sticker="1" />
+        <img class="sticker" src="assets/kaia/kaia-2.png" alt="Kaia photo 2" data-sticker="2" />
+        <img class="sticker" src="assets/kaia/kaia-3.png" alt="Kaia photo 3" data-sticker="3" />
+        <div class="sticker-fallback" id="sticker-fallback" aria-hidden="true">
+          <img src="assets/strawberry.svg" alt="" />
+        </div>
+      </div>
+    </header>
+
+    <main id="app" class="app-root" aria-live="polite">
+      <p class="boot-msg">Warming up the high chair…</p>
+    </main>
+
+    <footer class="footer">
+      <p>
+        <strong>Allergy note:</strong> Everyday meals avoid peanut, walnut, cashew, pistachio, and almond.
+        OIT dosing is separate / doctor-managed. Portions = follow her appetite
+        (even if “her appetite” means three bites and a victory lap).
+      </p>
+      <span class="paw">Made with crumbs, kisses &amp; corgi energy 🐾🍓</span>
+    </footer>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

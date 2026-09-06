@@ -17,18 +17,28 @@ import {
   formatWeekLabel,
   dateForDay,
 } from '../data/seedMeals.js';
+import {
+  getWeekStart as storeGetWeekStart,
+  setWeekStart as storeSetWeekStart,
+  subscribeWeekStart,
+} from '../weekStore.js';
 import { getMeals } from './mealLibrary.js';
 import { setStatus } from './status.js';
 
 let rootEl = null;
-let weekStart = mondayOf();
+let weekStart = storeGetWeekStart();
 let slotsByKey = new Map(); // `${dayIndex}:${slot}` → row
 let unsub = null;
+let unsubWeek = null;
 let dayFilter = 'all';
 let seededThisSession = new Set();
 
 export function getWeekStart() {
   return weekStart;
+}
+
+export function setWeekStart(iso) {
+  storeSetWeekStart(iso);
 }
 
 export async function initWeekPlanner(container) {
@@ -82,12 +92,18 @@ export async function initWeekPlanner(container) {
   `;
 
   bindEvents();
-  await loadWeek(weekStart);
+  if (unsubWeek) unsubWeek();
+  unsubWeek = subscribeWeekStart((ws) => {
+    if (ws !== weekStart) loadWeek(ws);
+  });
+  await loadWeek(storeGetWeekStart());
 }
 
 export function destroyWeekPlanner() {
   if (unsub) unsub();
   unsub = null;
+  if (unsubWeek) unsubWeek();
+  unsubWeek = null;
 }
 
 export function refreshLibraryPicker() {
@@ -108,6 +124,7 @@ export function refreshLibraryPicker() {
 
 async function loadWeek(start) {
   weekStart = start;
+  storeSetWeekStart(start);
   if (unsub) unsub();
   updateWeekLabel();
   try {

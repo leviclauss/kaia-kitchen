@@ -1209,3 +1209,204 @@ textarea.input {
     padding: 0.3rem 0.45rem;
   }
 }
+
+
+/* ===== Grocery list ===== */
+
+.grocery-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.grocery-toolbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+  background: var(--card);
+  border: 2px solid var(--blush);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 1rem 1.1rem;
+}
+
+.grocery-toolbar-text {
+  min-width: 0;
+  flex: 1;
+}
+
+.grocery-toolbar h2 {
+  font-size: 1.35rem;
+  color: var(--berry-deep);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.grocery-toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.grocery-filters {
+  padding: 0 0.15rem;
+}
+
+.grocery-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.grocery-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: 0.55rem 0.65rem;
+  padding: 0.65rem 0.85rem;
+  background: var(--card);
+  border: 2px solid var(--blush);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  transition: background 0.15s, border-color 0.15s, opacity 0.15s;
+}
+
+.grocery-row--have {
+  background: linear-gradient(165deg, #f3faf3, #fff);
+  border-color: #cfe8cf;
+  opacity: 0.92;
+}
+
+.grocery-row--have .grocery-name {
+  text-decoration: line-through;
+  color: var(--ink-soft);
+}
+
+.grocery-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  width: 1.55rem;
+  height: 1.55rem;
+}
+
+.grocery-check input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  margin: 0;
+}
+
+.grocery-check-ui {
+  width: 1.45rem;
+  height: 1.45rem;
+  border-radius: 0.45rem;
+  border: 2px solid var(--pink);
+  background: var(--cream);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s, border-color 0.12s, box-shadow 0.12s;
+}
+
+.grocery-check input:checked + .grocery-check-ui {
+  background: var(--leaf);
+  border-color: var(--leaf);
+  box-shadow: 0 0 0 3px rgba(91, 168, 90, 0.22);
+}
+
+.grocery-check input:checked + .grocery-check-ui::after {
+  content: "✓";
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.grocery-check input:focus-visible + .grocery-check-ui {
+  outline: 3px solid var(--berry);
+  outline-offset: 2px;
+}
+
+.grocery-name {
+  font-size: 0.95rem;
+  padding: 0.4rem 0.55rem;
+  border-color: transparent;
+  background: transparent;
+}
+
+.grocery-name:hover,
+.grocery-name:focus {
+  border-color: var(--pink);
+  background: var(--cream);
+}
+
+.grocery-source {
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  background: var(--blush);
+  color: var(--berry-deep);
+  white-space: nowrap;
+}
+
+.grocery-source--manual {
+  background: #ffe8d0;
+  color: #9a5a20;
+}
+
+.grocery-delete {
+  padding: 0.25rem 0.55rem;
+  min-width: 2rem;
+}
+
+.grocery-empty {
+  margin-top: 0.25rem;
+}
+
+@media (max-width: 560px) {
+  .app-tabs {
+    flex-wrap: wrap;
+  }
+
+  .tab {
+    flex: 1 1 30%;
+    font-size: 0.85rem;
+    padding: 0.6rem 0.5rem;
+  }
+
+  .grocery-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .grocery-toolbar-actions {
+    justify-content: stretch;
+  }
+
+  .grocery-toolbar-actions .btn {
+    flex: 1 1 auto;
+  }
+
+  .grocery-row {
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas:
+      "check name delete"
+      "check source delete";
+  }
+
+  .grocery-check { grid-area: check; }
+  .grocery-name { grid-area: name; }
+  .grocery-source { grid-area: source; justify-self: start; }
+  .grocery-delete { grid-area: delete; }
+}

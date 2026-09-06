@@ -45,6 +45,21 @@ create table if not exists public.week_slots (
 create index if not exists meals_household_idx on public.meals (household_id);
 create index if not exists week_slots_household_week_idx on public.week_slots (household_id, week_start);
 
+create table if not exists public.grocery_items (
+  id uuid primary key default gen_random_uuid(),
+  household_id uuid not null references public.households(id) on delete cascade,
+  week_start date not null,
+  name text not null,
+  have_it boolean not null default false,
+  source text not null default 'manual' check (source in ('plan','manual')),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  unique (household_id, week_start, name)
+);
+
+create index if not exists grocery_items_household_week_idx
+  on public.grocery_items (household_id, week_start);
+
 -- ---------------------------------------------------------------------------
 -- updated_at trigger
 -- ---------------------------------------------------------------------------
@@ -67,6 +82,11 @@ create trigger meals_set_updated_at
 drop trigger if exists week_slots_set_updated_at on public.week_slots;
 create trigger week_slots_set_updated_at
   before update on public.week_slots
+  for each row execute function public.set_updated_at();
+
+drop trigger if exists grocery_items_set_updated_at on public.grocery_items;
+create trigger grocery_items_set_updated_at
+  before update on public.grocery_items
   for each row execute function public.set_updated_at();
 
 -- ---------------------------------------------------------------------------
@@ -134,6 +154,7 @@ where h.id = 'c0ffee00-5a1a-4000-8000-00000000cafe'
 alter table public.households enable row level security;
 alter table public.meals enable row level security;
 alter table public.week_slots enable row level security;
+alter table public.grocery_items enable row level security;
 
 drop policy if exists "households_select_fixed" on public.households;
 create policy "households_select_fixed" on public.households
@@ -152,6 +173,12 @@ create policy "week_slots_all_fixed" on public.week_slots
   using (household_id = 'c0ffee00-5a1a-4000-8000-00000000cafe')
   with check (household_id = 'c0ffee00-5a1a-4000-8000-00000000cafe');
 
+drop policy if exists "grocery_items_all_fixed" on public.grocery_items;
+create policy "grocery_items_all_fixed" on public.grocery_items
+  for all to anon, authenticated
+  using (household_id = 'c0ffee00-5a1a-4000-8000-00000000cafe')
+  with check (household_id = 'c0ffee00-5a1a-4000-8000-00000000cafe');
+
 -- ---------------------------------------------------------------------------
 -- Realtime
 -- ---------------------------------------------------------------------------
@@ -165,6 +192,10 @@ begin
   end;
   begin
     alter publication supabase_realtime add table public.week_slots;
+  exception when duplicate_object then null;
+  end;
+  begin
+    alter publication supabase_realtime add table public.grocery_items;
   exception when duplicate_object then null;
   end;
 end $$;

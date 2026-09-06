@@ -9,6 +9,7 @@ import {
   destroyWeekPlanner,
   refreshLibraryPicker,
 } from './ui/weekPlanner.js';
+import { initGroceryList, destroyGroceryList } from './ui/groceryList.js';
 
 const app = document.getElementById('app');
 const statusHost = document.getElementById('status-host');
@@ -29,20 +30,24 @@ async function boot() {
     <div class="app-tabs" role="tablist">
       <button type="button" class="tab active" role="tab" aria-selected="true" data-tab="week">Week planner</button>
       <button type="button" class="tab" role="tab" aria-selected="false" data-tab="library">Recipe book</button>
+      <button type="button" class="tab" role="tab" aria-selected="false" data-tab="grocery">Grocery</button>
     </div>
     <div class="tab-panels">
       <div class="tab-panel" data-panel="week"></div>
       <div class="tab-panel hidden" data-panel="library"></div>
+      <div class="tab-panel hidden" data-panel="grocery"></div>
     </div>
   `;
 
   const weekPanel = app.querySelector('[data-panel="week"]');
   const libPanel = app.querySelector('[data-panel="library"]');
+  const groceryPanel = app.querySelector('[data-panel="grocery"]');
 
   await initWeekPlanner(weekPanel);
   await initMealLibrary(libPanel, {
     onChange: () => refreshLibraryPicker(),
   });
+  await initGroceryList(groceryPanel);
 
   app.querySelector('.app-tabs').addEventListener('click', (e) => {
     const tab = e.target.closest('[data-tab]');
@@ -64,6 +69,7 @@ async function boot() {
   window.addEventListener('beforeunload', () => {
     destroyMealLibrary();
     destroyWeekPlanner();
+    destroyGroceryList();
   });
 }
 
