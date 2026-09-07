@@ -24,6 +24,7 @@ import {
 } from '../weekStore.js';
 import { getMeals } from './mealLibrary.js';
 import { setStatus } from './status.js';
+import { initGenerateWeek, destroyGenerateWeek } from './generateWeek.js';
 
 let rootEl = null;
 let weekStart = storeGetWeekStart();
@@ -97,9 +98,23 @@ export async function initWeekPlanner(container) {
     if (ws !== weekStart) loadWeek(ws);
   });
   await loadWeek(storeGetWeekStart());
+  initGenerateWeek(rootEl, {
+    getWeekStart: () => weekStart,
+    onApplied: async () => {
+      await loadWeek(weekStart);
+    },
+    onLibraryChanged: () => {
+      refreshLibraryPicker();
+      // meal library listens via realtime; also nudge parent if present
+      try {
+        document.dispatchEvent(new CustomEvent('kaia:meals-changed'));
+      } catch (_) {}
+    },
+  });
 }
 
 export function destroyWeekPlanner() {
+  destroyGenerateWeek();
   if (unsub) unsub();
   unsub = null;
   if (unsubWeek) unsubWeek();

@@ -93,9 +93,15 @@ export async function initMealLibrary(container, { onChange } = {}) {
   unsub = subscribeMeals(async () => {
     await refresh({ quiet: true });
   });
+  window.addEventListener('kaia:meals-changed', onMealsChangedEvent);
+}
+
+function onMealsChangedEvent() {
+  refresh({ quiet: true });
 }
 
 export function destroyMealLibrary() {
+  window.removeEventListener('kaia:meals-changed', onMealsChangedEvent);
   if (unsub) unsub();
   unsub = null;
 }

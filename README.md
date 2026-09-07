@@ -12,6 +12,7 @@ Works as a Vite app deployed to GitHub Pages (leviclauss.github.io/kaia-kitchen)
 - Each week persists independently
 - Supabase realtime sync + small synced / offline status pill
 - Friendly setup screen when Supabase isn't configured yet
+- **Generate week** — ad-hoc LLM plan (Chutes) blending recipe-book meals with new soft finger-food ideas; slider From the book ↔ Try new; review/edit then Apply to this week
 - Allergy footer: avoid peanut, walnut, cashew, pistachio, almond; OIT separate
 
 ## Quick start (local)
@@ -61,6 +62,19 @@ This is intentional for a simple two-parent shared app — **not** multi-tenant 
 Anyone with the anon key + this UUID can edit the plan; treat the key like a household join code.
 
 When the current week has no slots after connect, the client seeds it once from the built-in default plan.
+
+
+## AI week generation (Chutes)
+
+See [docs-chutes.md](docs-chutes.md) for full Chutes + Edge Function setup (`CHUTES_API_KEY`, deploy `generate-week`).
+
+Summary:
+1. Create a Chutes API key (never put it in the browser / Vite env).
+2. Set secrets on project `wdkimbxxaweysweooavs`:
+   `supabase secrets set CHUTES_API_KEY=...` and optional `CHUTES_MODEL=deepseek-ai/DeepSeek-V3`
+   Dashboard: **Project Settings → Edge Functions → Secrets**.
+3. Deploy: `supabase functions deploy generate-week --project-ref wdkimbxxaweysweooavs`
+4. Week planner → **Generate week** → slider → edit draft → Apply to this week.
 
 ## GitHub Pages deploy
 
@@ -120,3 +134,4 @@ The root `styles.css` is leftover reference; the live app CSS is `src/styles/mai
 Use `npm run dev` or serve `dist/` after `npm run build`.
 
 Made with crumbs, kisses and corgi energy.
+
